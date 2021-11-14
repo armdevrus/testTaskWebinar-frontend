@@ -18,7 +18,7 @@ interface TodoItemsState {
 }
 
 interface TodoItemsAction {
-    type: 'loadState' | 'add' | 'delete' | 'toggleDone'| 'addTags';
+    type: 'loadState' | 'add' | 'delete' | 'toggleDone'| 'addTags'| 'save';
     data: any;
 }
 
@@ -102,6 +102,14 @@ function todoItemsReducer(state: TodoItemsState, action: TodoItemsAction) {
                     { ...item, done: !item.done },
                     ...state.todoItems.slice(itemIndex + 1),
                 ],
+            };
+            case 'save':
+                // console.log(state)
+            return {
+                ...state, todoItems: state.todoItems.map(
+                    item => item.id === action.data.id ?
+                        {...item, title: action.data.value} : item
+                )
             };
         default:
             throw new Error();
