@@ -1,9 +1,8 @@
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import {useTodoItems} from './TodoItemsContext';
 import {useForm, Controller} from 'react-hook-form';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Portal from '@material-ui/core/Portal';
 import {makeStyles} from '@material-ui/core/styles';
 import Typography from "@material-ui/core/Typography";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -41,7 +40,6 @@ export default function TodoItemForm() {
     const classesFilteredTodoItems = useFilteredTodoItemsStyles();
     const {dispatch} = useTodoItems();
     const {control, handleSubmit, reset, watch} = useForm();
-    // const container = useRef(null);
 
     const {todoItems} = useTodoItems();
 
@@ -65,11 +63,6 @@ export default function TodoItemForm() {
     const handleOnChangeValueSelectTag = event => setValueSelectTag(event.target.value)
 
     const filteredToDoItems = todoItems.filter(item => item.tags.some(tag => userSelectTags.includes(tag)))
-    // console.log(todoItems.map(item => item.tags))
-    // console.log(userSelectTags)
-    console.log(filteredToDoItems.map(item => item))
-    console.log(todoItems)
-
 
     return (
         <form
@@ -149,7 +142,6 @@ export default function TodoItemForm() {
                             name="add_tags"
                             control={control}
                             defaultValue=""
-                            rules={{required: true}}
                             render={({field}) => (
                                 <TextField
                                     {...field}

@@ -76,6 +76,7 @@ function todoItemsReducer(state: TodoItemsState, action: TodoItemsAction) {
             return action.data;
         }
         case 'add':
+            console.log(action)
             return {
                 ...state,
                 todoItems: [
@@ -84,8 +85,6 @@ function todoItemsReducer(state: TodoItemsState, action: TodoItemsAction) {
                 ],
             };
             case 'addTags':
-                // console.log(action)
-                // console.log(state)
             return {
                 ...state,
                 todoItems: state.todoItems.map(
@@ -114,7 +113,6 @@ function todoItemsReducer(state: TodoItemsState, action: TodoItemsAction) {
                 ],
             };
             case 'save':
-                // console.log(state)
             return {
                 ...state, todoItems: state.todoItems.map(
                     item => item.id === action.data.id ?

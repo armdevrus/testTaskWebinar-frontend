@@ -10,7 +10,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
-// import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import {makeStyles} from '@material-ui/core/styles';
@@ -76,7 +75,6 @@ export const TodoItemCard = function ({item}: { item: TodoItem }) {
     const [isSelectText, setIsSelectText] = useState(false)
     const [isShowAddTags, setIsShowAddTags] = useState(false)
     const [valuePoint, setValuePoint] = useState('')
-    // const [valueTag, setValueTag] = useState('')
 
     const classes = useTodoItemCardStyles();
     const {dispatch} = useTodoItems();
@@ -116,13 +114,13 @@ export const TodoItemCard = function ({item}: { item: TodoItem }) {
     const handleCancelAddTags = () => {
         setIsShowAddTags(false)
     }
+
     const handleAddTags = () => {
         setIsShowAddTags(true)
     }
 
     const handleOnChangeValuePoint = (event: any) => setValuePoint(event.target.value)
-    // const handleOnChangeValueTag = (event: any) => setValueTag(event.target.value)
-    // console.log(item.tags)
+
     return (
         <Card
             className={classnames(classes.root, {
@@ -206,8 +204,6 @@ export const TodoItemCard = function ({item}: { item: TodoItem }) {
                     <CardContent style={{display: 'flex'}}>
 
                         <TextField id="standard-basic" label="Add tags" variant="standard"
-                            // value={valueTag}
-                            //        onChange={handleOnChangeValueTag}
                                    onKeyDown={handleOnKeyUpValueTag}
                         />
 
