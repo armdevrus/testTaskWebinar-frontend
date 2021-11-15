@@ -7,6 +7,7 @@ import {
 } from 'react';
 
 export interface TodoItem {
+    tags: any;
     id: string;
     title: string;
     details?: string;
@@ -78,9 +79,18 @@ function todoItemsReducer(state: TodoItemsState, action: TodoItemsAction) {
             return {
                 ...state,
                 todoItems: [
-                    { id: generateId(), done: false, ...action.data.todoItem },
+                    { id: generateId(), done: false, tags: [], ...action.data.todoItem },
                     ...state.todoItems,
                 ],
+            };
+            case 'addTags':
+                // console.log(action)
+                // console.log(state)
+            return {
+                ...state,
+                todoItems: state.todoItems.map(
+                    item => item.id === action.data.id ?
+                        {...item, tags: [...item.tags, action.data.value]} : item)
             };
         case 'delete':
             return {
@@ -108,8 +118,7 @@ function todoItemsReducer(state: TodoItemsState, action: TodoItemsAction) {
             return {
                 ...state, todoItems: state.todoItems.map(
                     item => item.id === action.data.id ?
-                        {...item, title: action.data.value} : item
-                )
+                        {...item, title: action.data.value} : item)
             };
         default:
             throw new Error();

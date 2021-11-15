@@ -12,6 +12,7 @@ import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import {makeStyles} from '@material-ui/core/styles';
 import classnames from 'classnames';
 import {motion} from 'framer-motion';
@@ -73,7 +74,9 @@ const useTodoItemCardStyles = makeStyles({
 export const TodoItemCard = function ({item}: { item: TodoItem }) {
 
     const [isSelectText, setIsSelectText] = useState(false)
+    const [isShowAddTags, setIsShowAddTags] = useState(false)
     const [valuePoint, setValuePoint] = useState('')
+    // const [valueTag, setValueTag] = useState('')
 
     const classes = useTodoItemCardStyles();
     const {dispatch} = useTodoItems();
@@ -92,6 +95,14 @@ export const TodoItemCard = function ({item}: { item: TodoItem }) {
         dispatch({type: 'save', data: {id: item.id, value: valuePoint}})
         setIsSelectText(false)
     };
+    const handleOnKeyUpValueTag = (event) => {
+        if (event.key === 'Enter') {
+            if (event.target.value.length > 0) {
+                dispatch({type: 'addTags', data: {id: item.id, value: event.target.value}})
+                event.target.value = ''
+            }
+        }
+    }
 
     const handleToggleDone = useCallback(
         () =>
@@ -102,8 +113,16 @@ export const TodoItemCard = function ({item}: { item: TodoItem }) {
         [item.id, dispatch],
     );
 
-    const handleOnChangeValuePoint = (event: any) => setValuePoint(event.target.value)
+    const handleCancelAddTags = () => {
+        setIsShowAddTags(false)
+    }
+    const handleAddTags = () => {
+        setIsShowAddTags(true)
+    }
 
+    const handleOnChangeValuePoint = (event: any) => setValuePoint(event.target.value)
+    // const handleOnChangeValueTag = (event: any) => setValueTag(event.target.value)
+    // console.log(item.tags)
     return (
         <Card
             className={classnames(classes.root, {
@@ -115,22 +134,21 @@ export const TodoItemCard = function ({item}: { item: TodoItem }) {
                     <CardHeader
                         action={
                             <>
-                                <IconButton aria-label="delete" onClick={handleSave}>
+                                <IconButton aria-label="save" onClick={handleSave}>
                                     <SaveIcon/>
                                 </IconButton>
-                                <IconButton aria-label="delete" onClick={handleCancel}>
+                                <IconButton aria-label="cancel" onClick={handleCancel}>
                                     <CancelIcon/>
                                 </IconButton>
                             </>
                         }
                         title={
-                            <Box
-                                component="form"
-                            >
-                                <TextField id="standard-basic" label="Standard" variant="standard"
-                                            value={valuePoint} onChange={handleOnChangeValuePoint}
-                                />
-                            </Box>
+
+                            <TextField id="standard-basic" label="New value" variant="standard"
+                                       value={valuePoint}
+                                       onChange={handleOnChangeValuePoint}
+                            />
+
                         }
                     />
                     :
@@ -140,7 +158,7 @@ export const TodoItemCard = function ({item}: { item: TodoItem }) {
                                 <IconButton aria-label="delete" onClick={handleDelete}>
                                     <DeleteIcon/>
                                 </IconButton>
-                                <IconButton aria-label="delete" onClick={handleEdit}>
+                                <IconButton aria-label="edit" onClick={handleEdit}>
                                     <EditIcon/>
                                 </IconButton>
                             </>
@@ -160,14 +178,58 @@ export const TodoItemCard = function ({item}: { item: TodoItem }) {
                         }
                     />
             }
+            <CardContent>
+                {
+                    item.tags?.map((item, index) => {
+                        return(
+                            <span
+                                style={{
+                                    marginLeft: '3px',
+                                    background: '#1976d1',
+                                    borderRadius: '8px',
+                                    padding: '5px',
+                                    color: '#fff',
+                                    fontWeight: 700,
+                                    fontSize: '16px',
+                                    fontFamily: 'Century Gothic'
+                                }}
+                                key={index}>
+                            #{item}
+                        </span>
+                        )
+                    })
+                }
+            </CardContent>
 
-            {item.details ? (
-                <CardContent>
-                    <Typography variant="body2" component="p">
-                        {item.details}
-                    </Typography>
-                </CardContent>
-            ) : null}
+            {
+                isShowAddTags ?
+                    <CardContent style={{display: 'flex'}}>
+
+                        <TextField id="standard-basic" label="Add tags" variant="standard"
+                            // value={valueTag}
+                            //        onChange={handleOnChangeValueTag}
+                                   onKeyDown={handleOnKeyUpValueTag}
+                        />
+
+                        <IconButton aria-label="cancel" onClick={handleCancelAddTags}>
+                            <CancelIcon/>
+                        </IconButton>
+                    </CardContent>
+                    :
+                    <CardContent>
+                        <Button variant="contained" color="primary" onClick={handleAddTags}
+                        >+ Add tags</Button>
+                    </CardContent>
+
+            }
+            {
+                item.details ? (
+                    <CardContent>
+                        <Typography variant="body2" component="p">
+                            {item.details}
+                        </Typography>
+                    </CardContent>
+                ) : null}
         </Card>
     );
 };
