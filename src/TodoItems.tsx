@@ -10,7 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelIcon from '@material-ui/icons/Cancel';
-import Box from '@material-ui/core/Box';
+// import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import {makeStyles} from '@material-ui/core/styles';
@@ -226,7 +226,7 @@ export const TodoItemCard = function ({item}: { item: TodoItem }) {
                 item.details ? (
                     <CardContent>
                         <Typography variant="body2" component="p">
-                            {item.details}
+                            Details: {item.details}
                         </Typography>
                     </CardContent>
                 ) : null}

@@ -8,16 +8,37 @@ import {makeStyles} from '@material-ui/core/styles';
 import Typography from "@material-ui/core/Typography";
 import CancelIcon from "@material-ui/icons/Cancel";
 import IconButton from "@material-ui/core/IconButton";
+import {motion} from "framer-motion";
+import {TodoItemCard} from "./TodoItems";
 
 const useInputStyles = makeStyles(() => ({
     root: {
-        marginBottom: 24,
+        marginBottom: 24
+    },
+}));
+const useFilteredTodoItemsStyles = makeStyles(() => ({
+    root: {
+        margin:'0 14px 14px 0',
+        paddingLeft: 13,
+        fontWeight: 700,
+        fontSize: '16px',
+        fontFamily: 'Century Gothic'
     },
 }));
 
+const spring = {
+    type: 'spring',
+    damping: 25,
+    stiffness: 120,
+    duration: 0.25,
+};
+
 export default function TodoItemForm() {
+    const [userSelectTags, setUserSelectTags] = useState<any>([])
+    const [valueSelectTag, setValueSelectTag] = useState('')
     const [isShowFilterWindow, setIsShowFilterWindow] = useState(true)
     const classes = useInputStyles();
+    const classesFilteredTodoItems = useFilteredTodoItemsStyles();
     const {dispatch} = useTodoItems();
     const {control, handleSubmit, reset, watch} = useForm();
     // const container = useRef(null);
@@ -27,10 +48,28 @@ export default function TodoItemForm() {
     const handleOpenWindowFilter = () => {
         setIsShowFilterWindow(false)
     }
+
     const handleCloseWindowFilter = () => {
      setIsShowFilterWindow(true)
     }
-    // console.log(todoItems.length > 0 ? true : false)
+
+    const handleAddTags = (event) => {
+        if (event.key === 'Enter') {
+            if (event.target.value.length > 0) {
+                setUserSelectTags([...userSelectTags, valueSelectTag])
+                setValueSelectTag('')
+            }
+        }
+    }
+
+    const handleOnChangeValueSelectTag = event => setValueSelectTag(event.target.value)
+
+    const filteredToDoItems = todoItems.filter(item => item.tags.some(tag => userSelectTags.includes(tag)))
+    // console.log(todoItems.map(item => item.tags))
+    // console.log(userSelectTags)
+    console.log(filteredToDoItems.map(item => item))
+    console.log(todoItems)
+
 
     return (
         <form
@@ -117,20 +156,39 @@ export default function TodoItemForm() {
                                     label="Text tags here"
                                     fullWidth={true}
                                     className={classes.root}
+                                    onChange={handleOnChangeValueSelectTag}
+                                    value={valueSelectTag}
+                                    onKeyDown={handleAddTags}
                                 />
                             )}
                         />
                         {
-
+                            userSelectTags?.map((item, index) => {
+                                return(
+                                    <span
+                                        style={{
+                                            marginLeft: '3px',
+                                            background: '#1976d1',
+                                            borderRadius: '8px',
+                                            padding: '5px',
+                                            color: '#fff',
+                                            fontWeight: 700,
+                                            fontSize: '16px',
+                                            fontFamily: 'Century Gothic'
+                                        }}
+                                        key={index}>#{item}</span>
+                                )
+                            })
                         }
-                        {/*<Button*/}
-                        {/*    variant="contained"*/}
-                        {/*    color="primary"*/}
-                        {/*    type="submit"*/}
-                        {/*    disabled={!watch('add_tags')}*/}
-                        {/*>*/}
-                        {/*    Add*/}
-                        {/*</Button>*/}
+                        {
+                            <ol className={classesFilteredTodoItems.root}>
+                                {filteredToDoItems.map((item) => (
+                                    <motion.li key={item.id} transition={spring} layout={true}>
+                                        <TodoItemCard item={item}/>
+                                    </motion.li>
+                                ))}
+                            </ol>
+                        }
                     </div> : null
             }
         </form>
